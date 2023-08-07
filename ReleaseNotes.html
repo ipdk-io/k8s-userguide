@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPDK Kubernetes* Infrastructure Offload Release Notes &mdash; k8s-infra-offload 23.07 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Target Setup for Intel IPU ES2K" href="guides/setup/target-setup-es2k.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            k8s-infra-offload
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Setup Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Setup.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/k8s-docker-containerd-install.html">Kubernetes, Docker, Containerd Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/setup/target-setup-dpdk.html">Target Setup for P4-DPDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/setup/target-setup-es2k.html">Target Setup for Intel IPU ES2K</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Release notes</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">IPDK Kubernetes* Infrastructure Offload Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#releases">Releases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ipdk-23-07">IPDK 23.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#highlights">Highlights</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#es2k-target">ES2K target</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dpdk-target">DPDK target</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#common-changes">Common Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#known-issues">Known Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coming-attractions">Coming Attractions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-and-build-instructions">Installation and Build Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license-notices-disclaimers">License, Notices, &amp; Disclaimers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#licensing">Licensing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">k8s-infra-offload</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">IPDK Kubernetes* Infrastructure Offload Release Notes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ReleaseNotes.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ipdk-kubernetes-infrastructure-offload-release-notes">
+<h1>IPDK Kubernetes* Infrastructure Offload Release Notes<a class="headerlink" href="#ipdk-kubernetes-infrastructure-offload-release-notes" title="Permalink to this heading"></a></h1>
+<section id="releases">
+<h2>Releases<a class="headerlink" href="#releases" title="Permalink to this heading"></a></h2>
+<section id="ipdk-23-07">
+<h3>IPDK 23.07<a class="headerlink" href="#ipdk-23-07" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>This is the first release of K8s-Infra-Offload recipe that supports ES2K and DPDK targets.</p></li>
+</ul>
+</section>
+<section id="highlights">
+<h3>Highlights<a class="headerlink" href="#highlights" title="Permalink to this heading"></a></h3>
+<section id="es2k-target">
+<h4>ES2K target<a class="headerlink" href="#es2k-target" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Support for Kubernetes Container Network Interface (CNI) to deploy pods and
+enable pod-to-pod connectivity on a P4 target using hardware device interfaces.</p></li>
+<li><p>Use of internal gateway with dummy MAC to enable layer-3 connectivity on the same node.</p></li>
+<li><p>Support for dynamic Subfunctions on ES2K.
+Subfunction is a lightweight function that has a parent PCI function on which it is
+deployed. It is created and deployed in a unit of 1. Unlike SRIOV VFs, a subfunction
+doesn’t require its own PCI virtual function. A subfunction communicates with the
+hardware through the parent PCI function.</p></li>
+<li><p>Infra Manager build support on ARM cores.</p></li>
+</ul>
+</section>
+<section id="dpdk-target">
+<h4>DPDK target<a class="headerlink" href="#dpdk-target" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Support for internal gateway with dummy MAC to enable layer-3 connectivity on the
+same node.</p></li>
+<li><p>service of type=ClusterIP support.
+Service Load Balancing within the node to allow multiple pods on same node to
+act as end points providing any application service.</p></li>
+<li><p>Bi-directional Auto Learning and Flow Pinning (a.k.a Connection Tracking),
+used with load balancing, to allow consistent end point pod selection, once it
+has been selected for the first packet.</p></li>
+<li><p>DNS service provided by Core DNS pods to other pods.</p></li>
+</ul>
+</section>
+</section>
+<section id="common-changes">
+<h3>Common Changes<a class="headerlink" href="#common-changes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Makefile target to support tls-secrets and certificate generation</p></li>
+<li><p>Automatated build &amp; integration test on each commit</p></li>
+<li><p>Felix integration and communication with Infrastructure Offload Components.</p></li>
+<li><p>Addition of DB to store state information.</p></li>
+<li><p>Support for Fedora33</p></li>
+<li><p>Support for Go version 1.20.5</p></li>
+<li><p>Support for logging per feature in components</p></li>
+<li><p>Configurable MTU using config file</p></li>
+</ul>
+</section>
+<section id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>“make undeploy” fails as a non-root user</p></li>
+<li><p>Unable to deploy services after deploy/undeploy a few times</p></li>
+<li><p>Infra manager restarts on sending “Empty CNI Add request”</p></li>
+<li><p>Infra manager restarts on running anamoly test cases on fuzz testing using
+defensics</p></li>
+<li><p>Persistent /var/log/inframanager.log is not deleted after “make undeploy”</p></li>
+<li><p>conf and few other params in “inframanager/config.yaml” are not used,
+should be removed from input file</p></li>
+<li><p>Unable to create pods after add/delete a few times</p></li>
+</ul>
+</section>
+<section id="known-issues">
+<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>This release does not support multi-tenant or multi-node deployments. At
+present, the underlying IPDK networking recipe needs to be run on bare metal
+on host CPU cores. The entire node, used for deployment, is assumed to be a
+trusted zone. However, gRPC/gNMI channels for communications are still
+secured using TLS.</p></li>
+<li><p>ES2K feature set is limited to pod-to-pod connectivity.</p></li>
+<li><p>Incomplete integration for Network Policies.</p></li>
+<li><p>Infra agent fails to come up if interface name is not correct</p></li>
+<li><p>Less than expected number of PODs are in Running state</p></li>
+<li><p>Infrap4d is not started by create_interfaces.sh script due to incorrect
+BDF in es2k_skip_p4.conf</p></li>
+<li><p>Inframanger crashes with error on sending invalid grpc messages from
+Defensics for fuzz testing</p></li>
+<li><p>Script create_interfaces.sh should report the status of the actions performed</p></li>
+<li><p>Inframanager log level setting and some cleanup</p></li>
+<li><p>Need support to set log level for all modules under Inframanager
+from the config setting</p></li>
+</ul>
+</section>
+<section id="coming-attractions">
+<h3>Coming Attractions<a class="headerlink" href="#coming-attractions" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[ES2K]</span></code> Support for Service and Load balancing.</p></li>
+<li><p>Support for Kubernetes Network Policy feature on both targets.</p></li>
+<li><p>Support for Calico BGP and basic control plane API interfaces.</p></li>
+<li><p>Support for natOutgoing for services with backends outside of the cluster.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[ES2K]</span></code> support for Device creation and queue allocation on ARM</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[ES2K]</span></code> Infra Manager on ARM support</p></li>
+</ul>
+</section>
+</section>
+<section id="installation-and-build-instructions">
+<h2>Installation and Build Instructions<a class="headerlink" href="#installation-and-build-instructions" title="Permalink to this heading"></a></h2>
+<p>See the following for more information:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#k8s-docker-containerd-install.md"><span class="xref myst">Kubernetes*, Docker*, and containerd* Installation</span></a></p></li>
+<li><p><a class="reference internal" href="#IPDK_K8s_Recipe_Readme.md"><span class="xref myst">Kubernetes* Infrastructure Offload Readme</span></a></p></li>
+</ul>
+</section>
+<section id="license-notices-disclaimers">
+<h2>License, Notices, &amp; Disclaimers<a class="headerlink" href="#license-notices-disclaimers" title="Permalink to this heading"></a></h2>
+<section id="licensing">
+<h3>Licensing<a class="headerlink" href="#licensing" title="Permalink to this heading"></a></h3>
+<p>For licensing information, see the file “LICENSE” in the root folder of the
+repository.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="guides/setup/target-setup-es2k.html" class="btn btn-neutral float-left" title="Target Setup for Intel IPU ES2K" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Intel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
