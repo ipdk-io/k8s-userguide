@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubernetes, Docker, Containerd Installation &mdash; k8s-infra-offload 23.07 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Target Setup for P4-DPDK" href="setup/target-setup-dpdk.html" />
+    <link rel="prev" title="Getting started" href="../Setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            k8s-infra-offload
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Setup Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Setup.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Kubernetes, Docker, Containerd Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-kernel-modules-and-kernel-settings">Set Up Kernel Modules and Kernel Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-configure-and-run-docker">Install, Configure, and Run Docker*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-configure-and-run-containerd">Install, Configure, and Run Containerd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-kubernetes-components">Install Kubernetes Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup/target-setup-dpdk.html">Target Setup for P4-DPDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup/target-setup-es2k.html">Target Setup for Intel IPU ES2K</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Release notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">IPDK Kubernetes* Infrastructure Offload Release Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">k8s-infra-offload</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Kubernetes, Docker, Containerd Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/k8s-docker-containerd-install.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kubernetes-docker-containerd-installation">
+<h1>Kubernetes, Docker, Containerd Installation<a class="headerlink" href="#kubernetes-docker-containerd-installation" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="#prerequisites"><span class="xref myst">Prerequisites</span></a></p></li>
+<li><p><a class="reference internal" href="#Set-Up-Kernel-Modules-and-Kernel-Settings"><span class="xref myst">Set Up Kernel Modules and Kernel Settings</span></a></p></li>
+<li><p><a class="reference internal" href="#install-configure-and-run-docker"><span class="xref myst">Install, Configure, and Run Docker</span></a></p></li>
+<li><p><a class="reference internal" href="#install-configure-and-run-containerd"><span class="xref myst">Install, Configure and Run Containerd</span></a></p></li>
+<li><p><a class="reference internal" href="#install-kubernetes-components"><span class="xref myst">Install Kubernetes Components</span></a></p></li>
+</ul>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Kubernetes is known to not work well with Linux swapping; as a result, swapping
+should be turned off.</p>
+<p>Before installing Kubernetes, do the following:</p>
+<ol class="arabic">
+<li><p>Disable swapping on all devices:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># swapoff -a</span>
+</pre></div>
+</div>
+</li>
+<li><p>For Fedora* 33, swapoff doesn’t completely turn off the swapping after
+a reboot. Remove the following package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># dnf remove zram-generator-defaults</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check if swapping is off:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># swapon --show</span>
+</pre></div>
+</div>
+</li>
+<li><p>Verify that no zram device is listed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># lsblk</span>
+</pre></div>
+</div>
+</li>
+<li><p>Remove any swap-specific entries from <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code>.</p></li>
+</ol>
+</section>
+<section id="set-up-kernel-modules-and-kernel-settings">
+<h2>Set Up Kernel Modules and Kernel Settings<a class="headerlink" href="#set-up-kernel-modules-and-kernel-settings" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Load the following kernel modules and add them to <code class="docutils literal notranslate"><span class="pre">modules-load</span></code> so they
+get automatically loaded during the reboot:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># modprobe overlay</span>
+<span class="c1"># modprobe br_netfilter</span>
+
+<span class="c1"># cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf</span>
+br_netfilter
+EOF
+</pre></div>
+</div>
+</li>
+<li><p>Enable IPvX forwarding:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># sudo tee /etc/sysctl.d/kubernetes.conf&lt;&lt;EOF</span>
+net.bridge.bridge-nf-call-ip6tables<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+net.bridge.bridge-nf-call-iptables<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+net.ipv4.ip_forward<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+EOF
+<span class="c1"># sysctl -p</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">SELinux</span></code> in permissive mode and verify:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># sudo sed -i &#39;s/^SELINUX=enforcing$/SELINUX=permissive/&#39; /etc/selinux/config</span>
+<span class="c1"># getenforce</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="install-configure-and-run-docker">
+<h2>Install, Configure, and Run Docker*<a class="headerlink" href="#install-configure-and-run-docker" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Install Docker*, configure associated settings, and start it. Docker is
+required when using older versions of Kubernetes (&lt; v1.23) as dockerd talks
+to containerd to pull Kubernetes images. Docker is not required if CRI
+runtime is containerd.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># dnf update -y</span>
+<span class="c1"># dnf install -y dnf-plugins-core</span>
+<span class="c1"># dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo</span>
+<span class="c1"># dnf install docker-ce docker-ce-cli containerd.io</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create or edit <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/docker.service.d/http-proxy.conf</span></code> with
+proxies, if your setup is behind a proxy. It should have contents like the
+following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Service<span class="o">]</span>
+<span class="nv">Environment</span><span class="o">=</span><span class="s2">&quot;HTTPS_PROXY=&lt;proxy-url&gt;&quot;</span>
+<span class="nv">Environment</span><span class="o">=</span><span class="s2">&quot;HTTP_PROXY=&lt;proxy-url&gt;&quot;</span>
+<span class="nv">Environment</span><span class="o">=</span><span class="s2">&quot;NO_PROXY=localhost,127.0.0.1,::1&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set the storage driver as overlay2 and use cgroupdriver:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># mkdir -p /etc/docker</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">/edit</span> <span class="pre">/etc/docker/daemon.json</span></code> to have contents as shown below.
+The <code class="docutils literal notranslate"><span class="pre">registry-mirrors</span></code> setting in this file is needed when a user is limited
+by Docker pull cap limits on free user accounts.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+<span class="s2">&quot;exec-opts&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;native.cgroupdriver=systemd&quot;</span><span class="o">]</span>,
+<span class="s2">&quot;log-driver&quot;</span>:<span class="w"> </span><span class="s2">&quot;json-file&quot;</span>,
+<span class="s2">&quot;log-opts&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="s2">&quot;max-size&quot;</span>:<span class="w"> </span><span class="s2">&quot;50m&quot;</span>
+<span class="o">}</span>,
+<span class="s2">&quot;data-root&quot;</span>:<span class="w"> </span><span class="s2">&quot;/mnt/docker-data&quot;</span>,
+<span class="s2">&quot;storage-driver&quot;</span>:<span class="w"> </span><span class="s2">&quot;overlay2&quot;</span>,
+<span class="s2">&quot;registry-mirrors&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;https://mirror.gcr.io&quot;</span><span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">~/.docker/config.json</span></code> with the following contents:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;proxies&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="s2">&quot;default&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="s2">&quot;httpProxy&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;proxy-url&gt;&quot;</span>,
+<span class="w">                        </span><span class="s2">&quot;httpsProxy&quot;</span>:<span class="w"> </span><span class="s2">&quot;&lt;proxy-url&gt;&quot;</span>,
+<span class="w">                        </span><span class="s2">&quot;noProxy&quot;</span>:<span class="w"> </span><span class="s2">&quot;localhost,127.0.0.1&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Start the Docker daemon:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># systemctl start docker</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a local registry and verify that it is running. Note that this
+requires Docker login credentials to set up an authentication token on
+a local node.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># docker login</span>
+Authenticating<span class="w"> </span>with<span class="w"> </span>existing<span class="w"> </span>credentials...
+WARNING!<span class="w"> </span>Your<span class="w"> </span>password<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>stored<span class="w"> </span>unencrypted<span class="w"> </span><span class="k">in</span><span class="w"> </span>/root/.docker/config.json.
+Configure<span class="w"> </span>a<span class="w"> </span>credential<span class="w"> </span>helper<span class="w"> </span>to<span class="w"> </span>remove<span class="w"> </span>this<span class="w"> </span>warning.<span class="w"> </span>See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login<span class="w"> </span>Succeeded
+
+<span class="c1"># docker run -d -p 5000:5000 --restart=always --name registry registry:2</span>
+<span class="c1"># docker ps</span>
+CONTAINER<span class="w"> </span>ID<span class="w">        </span>IMAGE<span class="w">               </span>COMMAND<span class="w">                  </span>CREATED<span class="w">             </span>STATUS<span class="w">              </span>PORTS<span class="w">                    </span>NAMES
+<span class="w"> </span>99d9b2ede2ea<span class="w">        </span>registry:2<span class="w">          </span><span class="s2">&quot;/entrypoint.sh /etc…&quot;</span><span class="w">   </span><span class="m">36</span><span class="w"> </span>seconds<span class="w"> </span>ago<span class="w">      </span>Up<span class="w"> </span><span class="m">35</span><span class="w"> </span>seconds<span class="w">       </span><span class="m">0</span>.0.0.0:5000-&gt;5000/tcp<span class="w">   </span>registry
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="install-configure-and-run-containerd">
+<h2>Install, Configure, and Run Containerd<a class="headerlink" href="#install-configure-and-run-containerd" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">/etc/crictl.yaml</span></code> with following contents:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /etc/crictl.yaml</span>
+runtime-endpoint:<span class="w"> </span>unix:///run/containerd/containerd.sock
+image-endpoint:<span class="w"> </span>unix:///run/containerd/containerd.sock
+timeout:<span class="w"> </span><span class="m">10</span>
+debug:<span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+</li>
+<li><p>Enable containerd services and configure default settings and proxies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># systemctl enable containerd.service</span>
+<span class="c1"># mkdir -p /etc/containerd</span>
+<span class="c1"># containerd config default | tee /etc/containerd/config.toml</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">/etc/containerd/config.toml</span></code> file, under
+<code class="docutils literal notranslate"><span class="pre">[plugins.&quot;io.containerd.grpc.v1.cri&quot;.containerd.runtimes.runc.options]</span></code>,
+set <code class="docutils literal notranslate"><span class="pre">SystemCgroup</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>. The file would look as below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<span class="w">    </span><span class="o">[</span>plugins.<span class="s2">&quot;io.containerd.grpc.v1.cri&quot;</span>.containerd.runtimes<span class="o">]</span>
+<span class="w">      </span><span class="o">[</span>plugins.<span class="s2">&quot;io.containerd.grpc.v1.cri&quot;</span>.containerd.runtimes.runc<span class="o">]</span>
+<span class="w">        </span><span class="nv">runtime_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;io.containerd.runc.v2&quot;</span>
+<span class="w">        </span><span class="nv">runtime_engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nv">runtime_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nv">privileged_without_host_devices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+<span class="w">        </span><span class="nv">base_runtime_spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="o">[</span>plugins.<span class="s2">&quot;io.containerd.grpc.v1.cri&quot;</span>.containerd.runtimes.runc.options<span class="o">]</span>
+<span class="w">          </span><span class="nv">SystemdCgroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
+...
+</pre></div>
+</div>
+</li>
+<li><p>Create the following directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/lib/systemd/system/containerd.service.d
+</pre></div>
+</div>
+</li>
+<li><p>Create a proxy file as shown below. In this example, the pod network is
+10.244.0.0/16, service network is 10.96.0.0/16, and API server, local API
+endpoint, control plane endpoint is 192.168.110.5.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /usr/lib/systemd/system/containerd.service.d/proxy.conf</span>
+<span class="o">[</span>Service<span class="o">]</span>
+<span class="nv">Environment</span><span class="o">=</span><span class="s2">&quot;HTTP_PROXY=&lt;proxy-url&gt;&quot;</span>
+<span class="nv">Environment</span><span class="o">=</span><span class="s2">&quot;HTTPS_PROXY=&lt;proxy-url&gt;&quot;</span>
+<span class="nv">Environment</span><span class="o">=</span><span class="s2">&quot;NO_PROXY=localhost,127.0.0.1,::1,10.244.0.0/16,10.96.0.0/16,192.168.0.0/16,&lt;node-ip&gt;&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Configure the following environment variables for proxy settings for
+containerd. Include the host IP address, pod subnet, and service subnet in
+the <code class="docutils literal notranslate"><span class="pre">no_proxy</span></code> setting.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">no_proxy</span><span class="o">=</span><span class="m">127</span>.0.0.1,localhost,192.168.0.0/16,&lt;pod-cidr&gt;,&lt;service-cidr&gt;,&lt;host-ip&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">https_proxy</span><span class="o">=</span>&lt;proxy-url&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">http_proxy</span><span class="o">=</span>&lt;proxy-url&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Start the containerd services:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># systemctl start containerd.service</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check the status. It should show it running as below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># systemctl status containerd.service</span>
+<span class="w">  </span>containerd.service<span class="w"> </span>-<span class="w"> </span>containerd<span class="w"> </span>container<span class="w"> </span>runtime
+<span class="w">       </span>Loaded:<span class="w"> </span>loaded<span class="w"> </span><span class="o">(</span>/usr/lib/systemd/system/containerd.service<span class="p">;</span><span class="w"> </span>enabled<span class="p">;</span><span class="w"> </span>vendor<span class="w"> </span>preset:<span class="w"> </span>disabled<span class="o">)</span>
+<span class="w">      </span>Drop-In:<span class="w"> </span>/usr/lib/systemd/system/containerd.service.d
+<span class="w">               </span>└─proxy.conf
+<span class="w">       </span>Active:<span class="w"> </span>active<span class="w"> </span><span class="o">(</span>running<span class="o">)</span><span class="w"> </span>since<span class="w"> </span>Thu<span class="w"> </span><span class="m">2022</span>-07-14<span class="w"> </span><span class="m">13</span>:29:25<span class="w"> </span>IST<span class="p">;</span><span class="w"> </span>9min<span class="w"> </span>ago
+<span class="w">         </span>Docs:<span class="w"> </span>https://containerd.io
+<span class="w">      </span>Process:<span class="w"> </span><span class="m">100768</span><span class="w"> </span><span class="nv">ExecStartPre</span><span class="o">=</span>/sbin/modprobe<span class="w"> </span>overlay<span class="w"> </span><span class="o">(</span><span class="nv">code</span><span class="o">=</span>exited,<span class="w"> </span><span class="nv">status</span><span class="o">=</span><span class="m">0</span>/SUCCESS<span class="o">)</span>
+<span class="w">     </span>Main<span class="w"> </span>PID:<span class="w"> </span><span class="m">100769</span><span class="w"> </span><span class="o">(</span>containerd<span class="o">)</span>
+<span class="w">        </span>Tasks:<span class="w"> </span><span class="m">37</span>
+<span class="w">       </span>Memory:<span class="w"> </span><span class="m">19</span>.8M
+<span class="w">          </span>CPU:<span class="w"> </span>663ms
+<span class="w">       </span>CGroup:<span class="w"> </span>/system.slice/containerd.service
+<span class="w">               </span>└─100769<span class="w"> </span>/usr/bin/containerd
+
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;Start subscribing containerd event&quot;</span>
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;Start recovering state&quot;</span>
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span>serving...<span class="w"> </span><span class="nv">address</span><span class="o">=</span>/run/containerd/container&gt;
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span>serving...<span class="w"> </span><span class="nv">address</span><span class="o">=</span>/run/containerd/container&gt;
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;containerd successfully booted in 0.039112s&quot;</span>
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span>systemd<span class="o">[</span><span class="m">1</span><span class="o">]</span>:<span class="w"> </span>Started<span class="w"> </span>containerd<span class="w"> </span>container<span class="w"> </span>runtime.
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;Start event monitor&quot;</span>
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;Start snapshots syncer&quot;</span>
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;Start cni network conf syncer&quot;</span>
+<span class="w">  </span>&lt;...&gt;<span class="w"> </span><span class="nv">level</span><span class="o">=</span>info<span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;Start streaming server&quot;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="install-kubernetes-components">
+<h2>Install Kubernetes Components<a class="headerlink" href="#install-kubernetes-components" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Set up the Kubernetes repo manager:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat &lt;&lt;EOF | sudo tee /etc/yum.repos.d/kubernetes.repo</span>
+<span class="o">[</span>kubernetes<span class="o">]</span>
+<span class="nv">name</span><span class="o">=</span>Kubernetes
+<span class="nv">baseurl</span><span class="o">=</span>https://packages.cloud.google.com/yum/repos/kubernetes-el7-<span class="se">\$</span>basearch
+<span class="nv">enabled</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">gpgcheck</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">repo_gpgcheck</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">gpgkey</span><span class="o">=</span>https://packages.cloud.google.com/yum/doc/yum-key.gpg<span class="w"> </span>https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+<span class="c1"># dnf install -y kubelet-1.25.1 kubeadm-1.25.1 kubectl-1.25.1 containernetworking-plugins cri-tools-1.25.0 --disableexcludes=kubernetes</span>
+<span class="c1"># dnf list installed | grep kube</span>
+cri-tools.x86_64<span class="w">                                   </span><span class="m">1</span>.25.0-0<span class="w">                            </span>@kubernetes
+kubeadm.x86_64<span class="w">                                     </span><span class="m">1</span>.25.0-0<span class="w">                            </span>@kubernetes
+kubectl.x86_64<span class="w">                                     </span><span class="m">1</span>.25.0-0<span class="w">                            </span>@kubernetes
+kubelet.x86_64<span class="w">                                     </span><span class="m">1</span>.25.0-0<span class="w">                            </span>@kubernetes
+</pre></div>
+</div>
+</li>
+<li><p>Pull Kubernetes images and verify the downloaded images:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># kubeadm config images pull</span>
+
+<span class="c1"># crictl images ls</span>
+IMAGE<span class="w">                                </span>TAG<span class="w">                 </span>IMAGE<span class="w"> </span>ID<span class="w">            </span>SIZE
+docker.io/calico/cni<span class="w">                      </span>v3.24.1<span class="w">             </span>67fd9ab484510<span class="w">       </span><span class="m">87</span>.4MB
+docker.io/calico/kube-controllers<span class="w">         </span>v3.24.1<span class="w">             </span>f9c3c1813269c<span class="w">       </span><span class="m">31</span>.1MB
+docker.io/calico/node<span class="w">                     </span>v3.24.1<span class="w">             </span>75392e3500e36<span class="w">       </span><span class="m">80</span>.2MB
+localhost:5000/infraagent<span class="w">                 </span>latest<span class="w">              </span>0c33a598fd923<span class="w">       </span><span class="m">32</span>.2MB
+localhost:5000/inframanager<span class="w">               </span>latest<span class="w">              </span>56f21c0cc91a2<span class="w">       </span>11MB
+quay.io/tigera/operator<span class="w">                   </span>v1.28.1<span class="w">             </span>52468087127eb<span class="w">       </span><span class="m">18</span>.8MB
+registry.k8s.io/coredns/coredns<span class="w">           </span>v1.9.3<span class="w">              </span>5185b96f0becf<span class="w">       </span><span class="m">14</span>.8MB
+registry.k8s.io/etcd<span class="w">                      </span><span class="m">3</span>.5.4-0<span class="w">             </span>a8a176a5d5d69<span class="w">       </span>102MB
+registry.k8s.io/kube-apiserver<span class="w">            </span>v1.25.0<span class="w">             </span>4d2edfd10d3e3<span class="w">       </span><span class="m">34</span>.2MB
+registry.k8s.io/kube-controller-manager<span class="w">   </span>v1.25.0<span class="w">             </span>1a54c86c03a67<span class="w">       </span><span class="m">31</span>.3MB
+registry.k8s.io/kube-proxy<span class="w">                </span>v1.25.0<span class="w">             </span>58a9a0c6d96f2<span class="w">       </span><span class="m">20</span>.3MB
+registry.k8s.io/kube-scheduler<span class="w">            </span>v1.25.0<span class="w">             </span>bef2cf3115095<span class="w">       </span><span class="m">15</span>.8MB
+registry.k8s.io/pause<span class="w">                     </span><span class="m">3</span>.8<span class="w">                 </span>4873874c08efc<span class="w">       </span>311kB
+
+<span class="c1"># kubeadm config images list</span>
+registry.k8s.io/kube-apiserver:v1.25.0
+registry.k8s.io/kube-controller-manager:v1.25.0
+registry.k8s.io/kube-scheduler:v1.25.0
+registry.k8s.io/kube-proxy:v1.25.0
+registry.k8s.io/pause:3.8
+registry.k8s.io/etcd:3.5.4-0
+registry.k8s.io/coredns/coredns:v1.9.3
+</pre></div>
+</div>
+</li>
+<li><p>Enable the kubelet services:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># systemctl enable kubelet.service</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Setup.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="setup/target-setup-dpdk.html" class="btn btn-neutral float-right" title="Target Setup for P4-DPDK" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Intel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
