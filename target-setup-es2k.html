@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Target Setup for Intel IPU E2100 &mdash; k8s-infra-offload 23.07 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Security Guide" href="security/security-guide.html" />
+    <link rel="prev" title="Target Setup for P4-DPDK" href="target-setup-dpdk.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            k8s-infra-offload
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Setup Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker-containerd-install.html">Kubernetes, Docker, and containerd Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target-setup-dpdk.html">Target Setup for P4-DPDK</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Target Setup for Intel IPU E2100</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-hardware-board">Set Up Hardware Board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copy-custom-package-and-cp-init-config-to-imc">Copy Custom Package and cp_init Config to IMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-host">Set up Host</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-out-of-tree-idpf-driver">Install out-of-tree IDPF Driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-ipdk-sde-and-ipdk-networking-recipe">Install IPDK SDE and IPDK Networking Recipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-p4c">Install P4C</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compile-k8s-p4">Compile K8s P4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-p4runtime-pipeline-builder-file">Building p4runtime pipeline builder file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-certificates">Generating certificates</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Security guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security/security-guide.html">Security Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security/using-tls-certificates.html">Using TLS Certificates</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Release notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">IPDK Kubernetes Infrastructure Offload Release Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">k8s-infra-offload</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Target Setup for Intel IPU E2100</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/target-setup-es2k.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="target-setup-for-intel-ipu-e2100">
+<h1>Target Setup for Intel IPU E2100<a class="headerlink" href="#target-setup-for-intel-ipu-e2100" title="Permalink to this heading"></a></h1>
+<section id="set-up-hardware-board">
+<h2>Set Up Hardware Board<a class="headerlink" href="#set-up-hardware-board" title="Permalink to this heading"></a></h2>
+<p>Hardware setup requires the Intel IPU device to be connected to a link partner
+in a back-to-back manner. Refer to the setup topology in the
+FXP_P4_SDE_User_Guide.md included in the documentation in official release
+for details. This document also provides instructions on how to configure the
+machine with required BIOS settings, required third-party software, boot
+instructions, and system settings, as well as other information.</p>
+<p>Follow the SDE User Guide with all the steps until ipumgmtd is started.</p>
+<p>Perform following steps to setup k8s_dp custom package and node policy
+config file prior to rebooting imc.</p>
+</section>
+<section id="copy-custom-package-and-cp-init-config-to-imc">
+<h2>Copy Custom Package and cp_init Config to IMC<a class="headerlink" href="#copy-custom-package-and-cp-init-config-to-imc" title="Permalink to this heading"></a></h2>
+<p>K8s uses a custom p4 package for the datapath. The p4 artifacts for
+this custom program are pre-generated in the package provided by Intel.
+Please use these artifacts and put them under k8s_dp/es2k dir of k8s source.
+If any modifications are made, use the following instructions on
+compilation under <a class="reference internal" href="#compile-k8s-p4">Compile K8s P4</a>
+section of this guide. The default cp_init.cfg file would need changes for subfunction support
+on the host. An example file called <code class="docutils literal notranslate"><span class="pre">cp_init_use_case_cdq.cfg</span></code> has been provided.</p>
+<p>Copy fxp-net_k8s-dp.pkg to IMC ‘/work/scripts’ dir from the link partner machine.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp<span class="w"> </span>fxp-net_k8s-dp.pkg<span class="w"> </span><span class="m">100</span>.0.0.100:/work/scripts/.
+</pre></div>
+</div>
+<p>On IMC:
+Modify load_custom_pkg.sh as below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/work/scripts
+cp<span class="w"> </span>/etc/dpcp/cp_init_use_case_cdq.cfg<span class="w"> </span>cp_init.cfg
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>load_custom_pkg.sh
+</pre></div>
+</div>
+<p>Modify the script <code class="docutils literal notranslate"><span class="pre">load_custom_pkg.sh</span></code>
+so that it looks like the below</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+<span class="nv">CP_INIT_CFG</span><span class="o">=</span>/etc/dpcp/cfg/cp_init.cfg
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checking for custom package...&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-e<span class="w"> </span>fxp-net_k8s-dp.pkg<span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Custom package p4_custom.pkg found. Overriding default package&quot;</span>
+<span class="w">    </span>cp<span class="w">  </span>fxp-net_k8s-dp.pkg<span class="w"> </span>/etc/dpcp/package/
+<span class="w">    </span>cp<span class="w">  </span>cp_init.cfg<span class="w"> </span>/etc/dpcp/cfg/
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/etc/dpcp/package/default_pkg.pkg
+<span class="w">    </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/dpcp/package/fxp-net_k8s-dp.pkg<span class="w"> </span>/etc/dpcp/package/default_pkg.pkg
+<span class="w">    </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/sem_num_pages = 1;/sem_num_pages = 25;/g&#39;</span><span class="w"> </span><span class="nv">$CP_INIT_CFG</span>
+<span class="w">    </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/lem_num_pages = 1;/lem_num_pages = 25;/g&#39;</span><span class="w"> </span><span class="nv">$CP_INIT_CFG</span>
+<span class="k">else</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No custom package found. Continuing with default package&quot;</span>
+<span class="k">fi</span>
+</pre></div>
+</div>
+<p>The work directory on IMC is persistent so any config and package files
+copied here, will continue to exist over subsequent reboots.</p>
+</section>
+<section id="set-up-host">
+<h2>Set up Host<a class="headerlink" href="#set-up-host" title="Permalink to this heading"></a></h2>
+<p>Follow the steps listed in the FXP P4 SDE User Guide document for host setup.
+The steps include configuring Linux kernel boot parameters to
+enable IOMMU, ATE, etc.; installing ATE kernel and other RPMs; installing
+required third-party software; installing p4sde and p4-cp-nws.</p>
+</section>
+<section id="install-out-of-tree-idpf-driver">
+<h2>Install out-of-tree IDPF Driver<a class="headerlink" href="#install-out-of-tree-idpf-driver" title="Permalink to this heading"></a></h2>
+<p>IDPF driver creates subfunction interfaces which are allocated to Pods.
+Please refer to the IDPF documentation on how to install (or build if required for
+the right version). Documentation under features/networking/IDPF_Readme.rst in the
+documentation tarball</p>
+</section>
+<section id="install-ipdk-sde-and-ipdk-networking-recipe">
+<h2>Install IPDK SDE and IPDK Networking Recipe<a class="headerlink" href="#install-ipdk-sde-and-ipdk-networking-recipe" title="Permalink to this heading"></a></h2>
+<p>For K8s recipe on host, IPDK p4-cp-nws (p4-control) and p4-sde components need to be installed
+and run on the host natively.
+To install p4sde, follow the instructions in FXP P4SDE User Guide.</p>
+<p>To install infrap4d which is the networking recipe, follow instructions at
+https://github.com/ipdk-io/networking-recipe/blob/main/docs/guides/setup/es2k-setup-guide.md
+Make sure to checkout the appropriate</p>
+</section>
+<section id="install-p4c">
+<h2>Install P4C<a class="headerlink" href="#install-p4c" title="Permalink to this heading"></a></h2>
+<p>P4 PNA compiler is used to build P4 compiled artifacts. The source distribution
+for CPT and P4C is under in the p4-programs release tarball hw-p4-programs.xxxx.tgz.</p>
+</section>
+<section id="compile-k8s-p4">
+<h2>Compile K8s P4<a class="headerlink" href="#compile-k8s-p4" title="Permalink to this heading"></a></h2>
+<p>The P4 Programs User Guide describes how to build packages and
+artifacts for a sample P4 program. See the Build Custom Package
+section in the Intel P4 Programs Readme for detailed instructions.
+To build the k8s datapath p4 artifacts, follow the instructions below once compiler
+is installed and all the env variables required by the makefile are set.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>fxp-net_k8s-dp
+</pre></div>
+</div>
+<section id="building-p4runtime-pipeline-builder-file">
+<h3>Building p4runtime pipeline builder file<a class="headerlink" href="#building-p4runtime-pipeline-builder-file" title="Permalink to this heading"></a></h3>
+<p>This command is required to be run on all the artifacts. The pipeline builder serializes the artifacts to be sent over
+the p4runtime SetForwardingPipelineConfigRequest. This needs to be run on the ACC for split mode.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>&lt;file_path&gt;/tofino.bin
+/opt/p4/p4-cp-nws/bin/tdi_pipeline_builder<span class="w">  </span>-p4c_conf_file<span class="o">=</span>/usr/share/stratum/es2k/es2k_skip_p4.conf<span class="w">  </span>-bf_pipeline_config_binary_file<span class="o">=</span>&lt;file_path&gt;/k8s_dp.pb.bin
+</pre></div>
+</div>
+</section>
+</section>
+<section id="generating-certificates">
+<h2>Generating certificates<a class="headerlink" href="#generating-certificates" title="Permalink to this heading"></a></h2>
+<p>Refer to the file <a class="reference internal" href="security/security-guide.html"><span class="std std-doc">security-guide.md</span></a> for more details on generating and installing certificates</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="target-setup-dpdk.html" class="btn btn-neutral float-left" title="Target Setup for P4-DPDK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="security/security-guide.html" class="btn btn-neutral float-right" title="Security Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Intel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

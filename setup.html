@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting started &mdash; k8s-infra-offload 23.07 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Kubernetes, Docker, and containerd Installation" href="docker-containerd-install.html" />
+    <link rel="prev" title="Welcome to k8s-infra-offload’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            k8s-infra-offload
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Setup Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-kubernetes">Installing Kubernetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-target-and-dependencies">Set Up Target and Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-p4-kubernetes">Set Up P4 Kubernetes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#infraagent-config-file-update">infraagent config file update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inframanager-config-file-update">inframanager config file update</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deploy-p4-kubernetes">Deploy P4 Kubernetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pod-to-pod-ping">Pod-to-Pod Ping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#service-deployment">Service Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#debugging">Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#faqs">FAQs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clean-up">Clean Up</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#versions-and-third-parties">Versions and Third-parties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#os">OS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#golang">golang</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker">docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#containerd">containerd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kubernetes">kubernetes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calico">Calico</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker-containerd-install.html">Kubernetes, Docker, and containerd Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target-setup-dpdk.html">Target Setup for P4-DPDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target-setup-es2k.html">Target Setup for Intel IPU E2100</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Security guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security/security-guide.html">Security Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security/using-tls-certificates.html">Using TLS Certificates</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Release notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">IPDK Kubernetes Infrastructure Offload Release Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">k8s-infra-offload</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/setup.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+<section id="installing-kubernetes">
+<h2>Installing Kubernetes<a class="headerlink" href="#installing-kubernetes" title="Permalink to this heading"></a></h2>
+<p>Kubernetes Infra Offload requires Kubernetes, Docker*, and containerd* to be
+installed. See <a class="reference internal" href="docker-containerd-install.html"><span class="std std-doc">Kubernetes, Docker, and containerd Installation</span></a>
+for instructions. If these components are already installed on the machine,
+proceed to next step.</p>
+</section>
+<section id="set-up-target-and-dependencies">
+<h2>Set Up Target and Dependencies<a class="headerlink" href="#set-up-target-and-dependencies" title="Permalink to this heading"></a></h2>
+<p>Kubernetes Infra Offload supports two targets, viz. P4-DPDK and Intel IPU E2100.
+The Intel IPU E2100 target requires proper hardware setup and initialization.
+On both these platforms, Kubernetes Infra Offload software depends upon the
+daemon InfraP4d of the IPDK networking recipe to be runnning in the background.
+Once InfraP4d is running, Kubernetes can load its P4 pipeline and offload
+various functionalities on it (i.e. on the P4 data plane).</p>
+<p>The instructions to setup the target and install infrap4d and its dependencies,
+are different for the two targets.
+See <a class="reference internal" href="target-setup-dpdk.html"><span class="std std-doc">Target Setup for P4-DPDK</span></a> for instructions on
+installation of SDE and InfraP4d on P4-DPDK target.
+See <a class="reference internal" href="target-setup-es2k.html"><span class="std std-doc">Target Setup for Intel IPU E2100</span></a> for host setup
+and compilation of P4-SDE and P4-CP on Intel IPU E2100 target.</p>
+</section>
+<section id="set-up-p4-kubernetes">
+<h2>Set Up P4 Kubernetes<a class="headerlink" href="#set-up-p4-kubernetes" title="Permalink to this heading"></a></h2>
+<p>On the Intel IPU, k8s-infra-offload can run in two different modes, details of
+which are present in all relevant sections where mode based configurations are
+needed. The modes are -</p>
+<p>a. The split mode, where the inframanager runs on IPU ARM cores for rule offloads
+while the infraagent runs on host.</p>
+<p>b. The host mode, where every component runs on the host and offload happens
+from host.</p>
+<p>On DPDK, only the host mode is supported.</p>
+<p>Following steps cover instructions on setting up P4-K8S in either modes,
+once mentioned dependencies are compiled and installed.</p>
+<ol class="arabic">
+<li><p>Install Go package by following instructions at <a class="reference external" href="https://go.dev/doc/install">https://go.dev/doc/install</a>
+(Pick the right version for golang go compiler corresponding to K8s Recipe
+release version. This information can be found in file
+<a class="reference internal" href="release-notes.html"><span class="std std-doc">release-notes.rst</span></a>. Information on the latest
+supported version is available in “Versions and third-parties” section below.)</p></li>
+<li><p>Pull P4-K8s software from the GitHub repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ipdk-io/k8s-infra-offload.git<span class="w"> </span>p4-k8s
+<span class="nb">cd</span><span class="w"> </span>p4-k8s
+git<span class="w"> </span>checkout<span class="w"> </span>ipdk_v24.01
+</pre></div>
+</div>
+<p>For building K8S recipe, follow the steps below.</p>
+</li>
+<li><p>Build K8s P4 artifacts</p>
+<p>Notes:
+i) For E2100 target, get the K8s P4 artifacts and
+copy them into p4-k8s/k8s_dp/es2k/. This must be done before running
+below make commands. Ensure the following artifacts are present.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>k8s_dp/es2k/
+ls
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tdi</span><span class="o">.</span><span class="n">json</span>  <span class="n">context</span><span class="o">.</span><span class="n">json</span>  <span class="n">k8s_dp</span><span class="o">.</span><span class="n">p4</span>  <span class="n">k8s_dp</span><span class="o">.</span><span class="n">pb</span><span class="o">.</span><span class="n">bin</span>  <span class="n">p4Info</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>For generating the artifacts for E2100, refer to the
+<a class="reference internal" href="target-setup-es2k.html#compile-k8s-p4"><span class="std std-ref">compiling-p4-programs</span></a> section</p>
+<p>ii) By default, Makefile is configured to build for E2100 target. To build
+for P4-DPDK target, use “tagname=dpdk” argument for both make targets
+below.</p>
+<p>Build Kubernetes binaries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>build
+</pre></div>
+</div>
+</li>
+<li><p>Generate the certificates required for the mTLS connection between infraagent,
+inframanager, and infrap4d:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>gen-certs
+</pre></div>
+</div>
+<p>Note that the above script generates the default keys and certificates and
+uses cipher suites as specified in the <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> file.
+Refer to section <a class="reference internal" href="#inframanager-config-file-update">inframanager config file update</a>
+for any custom cipher suite, key, certificate change.</p>
+<p>Note that the above script generates the default keys and certificates and
+uses cipher suites as specified in the <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> file.</p>
+<p>For split mode, the openssl.cnf file under scripts/tls dir would require
+addition of the remote node IP address under <code class="docutils literal notranslate"><span class="pre">[server_alt_names]</span></code> section.
+inframanager in this mode runs on the remote ARM-ACC complex. This is
+required for mTLS between infraagent and inframanager to work.
+Look for sample “10.10.0.2” and replace it with the right IP Address.</p>
+</li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> to install all config and other artifacts to relevant
+directories</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">setup_infra.sh</span></code> script, which in addition to creating the
+specified number of virtual interfaces (TAP type on DPDK target and IDPF
+sub-functions on E2100), sets up the HugePages and starts infrap4d.
+The script supports infrastructure setup in two different modes.</p>
+<p>a. The split mode on E2100, where the inframanager runs on IPU ARM cores(remote end)
+while the infraagent runs on the host. In this mode, the communication channel
+between IPU ACC-ARM complex and host must pre-exist prior to execution of the
+script. This communication channel can be provisioned using node policy file
+on the IPU. The sample cdq node policy file has this communication channel
+pre-configured and channel will be functional if IPU is booted with this file.
+Please configure an IP address with a netmask of 255.255.0.0 on the remote
+ARM-ACC vport of this communication channel. This will be used later as an
+argument in setup_infra.sh script. For user convenience, certificates
+configuration file <code class="docutils literal notranslate"><span class="pre">openssl.cnf</span></code> is pre-configured with an example IP address
+of <code class="docutils literal notranslate"><span class="pre">10.10.0.2</span></code> for the remote end. Incase a different IP address is configured,
+update <code class="docutils literal notranslate"><span class="pre">scripts/tls/openssl.cnf</span></code> and re-execute step 4.</p>
+<p>b. The host mode on both targets, where every component runs on the host(engineering
+preview).</p>
+<p>For CDQ interfaces :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/setup_infra.sh<span class="w"> </span>-i<span class="w"> </span>&lt;<span class="m">8</span><span class="p">|</span><span class="m">16</span><span class="p">|</span>..&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="o">[</span>-r<span class="w"> </span>&lt;remote<span class="w"> </span>IP&gt;<span class="o">]</span>
+</pre></div>
+</div>
+<p>For SRIOV interfaces:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/setup_infra_sriov.sh<span class="w"> </span>-i<span class="w"> </span>&lt;<span class="m">8</span><span class="p">|</span><span class="m">16</span><span class="p">|</span>..&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;host&gt;
+</pre></div>
+</div>
+<p>Where, the options:
+-i  Num interfaces to configure for deployment
+-m  Mode host for running inframanager on host
+-r  IP address configured by the user on the ACC-ARM complex for
+connectivity to the Host. This is provisioned using Node Policy - comms
+channel ([5,0],[4,0]),([4,2],[0,3]). This is needed only for runnning
+in split mode.</p>
+<p>Script will auto assign an IP addresss from the same subnet on the Host side
+vport for connectivity. The communication channel vport interface name is
+autodetected by the script for the above mentioned comms channel configuration
+in the cdq node policy.</p>
+<p>Please also set following env variables for the deployment. These paths are
+needed to set the dependencies correctly.
+SDE_INSTALL - Default p4sde install directory
+P4CP_INSTALL - Default p4-cp install directory
+DEPEND_INSTALL - Default target dependencies directory
+K8S_RECIPE - Path to k8s recipe on the host</p>
+<p>After running the above script, verify that infrap4d is running.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps<span class="w"> </span>-ef<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>infrap4d
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root     1254701       1 99 13:34 ?        00:13:10 /host/networking-recipe/install/sbin/infrap4d
+</pre></div>
+</div>
+<p>On E2100 target, this script will also load the IDPF driver. Verify the
+presence of the PF:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>devlink<span class="w"> </span>dev<span class="w"> </span>show
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pci/0000:af:00.0
+</pre></div>
+</div>
+</li>
+<li><p>For the Intel IPU E2100, connect to IMC from host and run the following command on IMC:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>devmem<span class="w"> </span>0x202920C100<span class="w"> </span><span class="m">64</span><span class="w"> </span>0x8yy
+</pre></div>
+</div>
+<p>where yy is the 2nd octet of the MAC of the interface on host ending with ‘d5’ (when using CDQ) or ‘v1’ (when using SR-IOV).
+For example if the interface <code class="docutils literal notranslate"><span class="pre">ens801f0d5</span></code> has MAC <code class="docutils literal notranslate"><span class="pre">00:11:00:05:03:14</span></code>, then it needs to be</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>devmem<span class="w"> </span>0x202920C100<span class="w"> </span><span class="m">64</span><span class="w"> </span>0x811
+</pre></div>
+</div>
+<p>This command is currently required for the core-dns component of kubernetes to function.
+For CDQ, till ending with d3 are default sub-functions so first interface
+ending with d4 needs to be assigned to arp and d5 to host.</p>
+<p>For SRIOV - First VF interface ending with v0 goes to arp and V1 goes to host</p>
+</li>
+<li><p>Run ARP-Proxy script, which creates a new namespace and assigns an interface
+from the pool of interfaces created in previous step.
+On E2100 target, user needs to explicitly configure the interface to be
+assigned using IFACE environment variable.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">IFACE</span><span class="o">=</span>ens801f0d4
+</pre></div>
+</div>
+<p>Make changes to the <a class="reference internal" href="#infraagent-config-file-update">infraagent config file</a>
+for interface and interface type.</p>
+<p>For DPDK target, change the interfaceType in config.yaml file to “tap”.</p>
+<p>The script finally runs the arp-proxy on that assigned interface, within the
+isolated namespace.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/arp_proxy.sh
+</pre></div>
+</div>
+<p>Please note, any changes in config file need to be made
+as per section <a class="reference internal" href="#inframanager-config-file-update">inframanager config file update</a>
+before building the images in next step. Refer to it for updating ARP MAC
+address in the config file.</p>
+</li>
+<li><p>Make the docker images. This step builds the Kubernetes container images:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docker-build
+</pre></div>
+</div>
+</li>
+<li><p>Push InfraManager and InfraAgent images into docker private repo either
+manually or through make command, using either of the following:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docker-push
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>push<span class="w"> </span>localhost:5000/infraagent:latest
+docker<span class="w"> </span>push<span class="w"> </span>localhost:5000/inframanager:latest
+</pre></div>
+</div>
+<p>The docker images should now be listed in the local repository as below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>images
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>REPOSITORY                             TAG           IMAGE ID       CREATED         SIZE
+localhost:5000/inframanager            latest        7605ed47e042   5 minutes ago   22.1MB
+&lt;none&gt;                                 &lt;none&gt;        485d7bc6ec38   5 minutes ago   1.38GB
+localhost:5000/infraagent              latest        500075b89922   6 minutes ago   68.7MB
+&lt;none&gt;                                 &lt;none&gt;        dc519d06de56   6 minutes ago   1.68GB
+...
+</pre></div>
+</div>
+<ol class="arabic" start="11">
+<li><p>Pull images for use by Kubernetes Container Runtime Interface (CRI):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>crictl<span class="w"> </span>pull<span class="w"> </span>localhost:5000/inframanager:latest
+crictl<span class="w"> </span>pull<span class="w"> </span>localhost:5000/infraagent:latest
+</pre></div>
+</div>
+</li>
+</ol>
+<section id="infraagent-config-file-update">
+<h3>infraagent config file update<a class="headerlink" href="#infraagent-config-file-update" title="Permalink to this heading"></a></h3>
+<p>The config file <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> is used to inform the
+infraagent which interface and interfacetype to use.</p>
+<p>The interfaceType should be <code class="docutils literal notranslate"><span class="pre">cdq</span></code> for E2100 and the the interface name is the
+base name for PF for PCI device ID 1452.
+For SRIOV interfaces, the type should be <code class="docutils literal notranslate"><span class="pre">sriov</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>interfaceType : cdq
+interface: ens801f0
+mtls: true
+insecure: false
+</pre></div>
+</div>
+<p>For split mode, also configure the follwing.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>managerAddr : &lt;IP address of comms channel on ACC&gt;
+managerPort : 50002
+</pre></div>
+</div>
+<p>Perform “make” after updates to <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> to bring changes
+into effect.</p>
+</section>
+<section id="inframanager-config-file-update">
+<h3>inframanager config file update<a class="headerlink" href="#inframanager-config-file-update" title="Permalink to this heading"></a></h3>
+<p>The config file <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> is used to define the parameters
+which the inframanager will use for the connection establishment with infrap4d
+and for the interfaces created.</p>
+<p>All fields have a default value in the file. Please verify if the values
+correspond to the desired values especially arpmac.</p>
+<p>InfraManager section:
+addr: The local address to which the inframanager will bind to as the
+listening socket for infraagent. In <code class="docutils literal notranslate"><span class="pre">host</span></code> mode, it can be the localhost.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>addr:<span class="w"> </span><span class="m">127</span>.0.0.1:50002
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">split</span></code> mode, it needs to be the ACC comms channel IP. Example</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>addr:10.10.0.2:50002
+</pre></div>
+</div>
+<p>For InterfaceType, it needs to be <code class="docutils literal notranslate"><span class="pre">sriov</span></code> for SRIOV since it defaults to <code class="docutils literal notranslate"><span class="pre">cdq</span></code>.</p>
+<p>arpmac: The arpmac needs to be configured. This should be the
+MAC of the interface the user wants to configure as the ARP-proxy gateway.
+This is the address of the interface which is given to the arp-proxy
+namespace using the <code class="docutils literal notranslate"><span class="pre">scrips/arp_proxy.sh</span></code> script mentioned in
+the <a class="reference internal" href="#set-up-p4-kubernetes">Set Up P4 Kubernetes</a> for ARP proxy gateway.</p>
+<p>If user doesn’t wish to use these default keys, certificates, and cipher suites, then
+modify the <code class="docutils literal notranslate"><span class="pre">scripts/mev/tls/gen_certs.sh</span></code> script accordingly before running
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">gen-certs</span></code> and modify the <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> file with preferred
+cipher suites. These changes need to be done prior to the creation of container
+images in step 9 of the <a class="reference internal" href="#set-up-p4-kubernetes">Set Up P4 Kubernetes</a> section.</p>
+<p>Perform “make” after updates to <code class="docutils literal notranslate"><span class="pre">deploy/common-config.yaml</span></code> to bring changes
+into effect.</p>
+</section>
+</section>
+<section id="deploy-p4-kubernetes">
+<h2>Deploy P4 Kubernetes<a class="headerlink" href="#deploy-p4-kubernetes" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Initialize and start the core Kubernetes components:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubeadm<span class="w"> </span>init<span class="w"> </span>--pod-network-cidr<span class="o">=</span>&lt;pod-cidr&gt;<span class="w"> </span>--service-cidr<span class="o">=</span>&lt;service-cidr&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Once the Kubernetes control plane initialization has completed successfully,
+then do either of the following:</p>
+<ul>
+<li><p>As a non-root user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$HOME</span>/.kube
+cp<span class="w"> </span>-i<span class="w"> </span>/etc/kubernetes/admin.conf<span class="w"> </span><span class="nv">$HOME</span>/.kube/config
+chown<span class="w"> </span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span>:<span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="nv">$HOME</span>/.kube/config
+</pre></div>
+</div>
+</li>
+<li><p>Or as root user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">KUBECONFIG</span><span class="o">=</span>/etc/kubernetes/admin.conf
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Install and setup Calico plugin</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/usr/local/bin
+<span class="w"> </span>curl<span class="w"> </span>-L<span class="w"> </span>https://github.com/projectcalico/calico/releases/download/v3.24.1/calicoctl-linux-amd64<span class="w"> </span>-o<span class="w"> </span>kubectl-calico
+<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>kubectl-calico
+</pre></div>
+</div>
+</li>
+<li><p>Remove taints from the node.
+For single node deployment, the node must be untainted to allow worker pods
+to share the node with control plane. The taint to remove is “control-plane”
+or “master” or both. These taints can be removed as shown:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>node-role.kubernetes.io/control-plane-
+kubectl<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>node-role.kubernetes.io/master-
+</pre></div>
+</div>
+</li>
+<li><p>Create Kubernetes secrets from the generated certificates. The infraagent and
+inframanager read the certificates from the secrets.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>tls-secrets
+</pre></div>
+</div>
+</li>
+<li><p>Start the deployments:</p>
+<p>For split mode on the Intel IPU E2100, run the below on the host</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-split
+make<span class="w"> </span>deploy-calico
+</pre></div>
+</div>
+<p>For host mode, run the below instead</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy
+make<span class="w"> </span>deploy-calico
+</pre></div>
+</div>
+<p>Check deployment using the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>wide
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="pod-to-pod-ping">
+<h2>Pod-to-Pod Ping<a class="headerlink" href="#pod-to-pod-ping" title="Permalink to this heading"></a></h2>
+<p>To run a simple ping test from one pod to another, create two test pods. Note
+that, the yaml file in the package is to create a single test pod; you can copy
+and modify it to create pod with different name. For example, copy it as
+<code class="docutils literal notranslate"><span class="pre">test-pod2.yaml</span></code> and change the metadata name and container name to be
+<code class="docutils literal notranslate"><span class="pre">test-pod2</span></code>. The .yaml file for test-pod2 should look as below.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-pod2</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-pod2</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quay.io/quay/busybox:latest</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>Then, carry out the following steps.</p>
+<ol class="arabic">
+<li><p>Create both the test pods:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>example/test_pod.yaml
+kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>example/test_pod2.yaml
+</pre></div>
+</div>
+<p>Check that the two test pods are ready and running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-o<span class="w"> </span>wide
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NAME        READY   STATUS    RESTARTS   AGE    IP               NODE    NOMINATED NODE   READINESS GATES
+test-pod    1/1     Running   0          10m    10.244.0.6       ins21   &lt;none&gt;           &lt;none&gt;
+test-pod2   1/1     Running   0          9m33s  10.244.0.7       ins21   &lt;none&gt;           &lt;none&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Use the IP address from above output or <code class="docutils literal notranslate"><span class="pre">ifconfig</span></code> to get the IP address
+assigned to one of the pods. Then, ping that address from the other pod:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>test-pod<span class="w"> </span>--<span class="w"> </span>ifconfig<span class="w"> </span>eth0
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>test-pod2<span class="w"> </span>--<span class="w"> </span>ping<span class="w"> </span><span class="m">10</span>.244.0.6
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>PING 10.244.0.6 (10.244.0.6): 56 data bytes
+64 bytes from 10.244.0.6: seq=0 ttl=64 time=0.112 ms
+64 bytes from 10.244.0.6: seq=1 ttl=64 time=0.098 ms
+64 bytes from 10.244.0.6: seq=2 ttl=64 time=0.102 ms
+64 bytes from 10.244.0.6: seq=3 ttl=64 time=0.112 ms
+...
+</pre></div>
+</div>
+</li>
+<li><p>To delete above created test pods:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>test-pod<span class="w"> </span>test-pod2
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="service-deployment">
+<h2>Service Deployment<a class="headerlink" href="#service-deployment" title="Permalink to this heading"></a></h2>
+<p>Under <code class="docutils literal notranslate"><span class="pre">example/service</span></code> directory, there are TCP and UDP examples. They contain scripts for running and cleaning,
+and also a README each giving guidelines for the steps. After running the run scripts, the sample output command
+should look like below</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>wide
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+iperf-server   ClusterIP   10.111.123.3   &lt;none&gt;        5201/TCP   6m56s   app=iperf-server
+kubernetes      ClusterIP   10.96.0.1      &lt;none&gt;        443/TCP    15m     &lt;none&gt;
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>ep<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>wide
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NAMESPACE     NAME            ENDPOINTS                                               AGE
+default       iperf-server   10.244.0.5:5201,10.244.0.6:5201                         5h22m
+default       kubernetes      10.233.134.119:6443                                     5h35m
+kube-system   kube-dns        10.244.0.3:53,10.244.0.4:53,10.244.0.3:53 + 3 more...   5h35m
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>wide
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NAME                                        READY   STATUS    RESTARTS   AGE   IP           NODE    NOMINATED NODE   READINESS GATES
+iperf-clients-8gkv7                        1/1     Running   0          18m   10.244.0.9   ins21   &lt;none&gt;           &lt;none&gt;
+iperf-server-deployment-59bf4754f9-4hp4c   1/1     Running   0          18m   10.244.0.8   ins21   &lt;none&gt;           &lt;none&gt;
+...
+</pre></div>
+</div>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<section id="debugging">
+<h3>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>The Kubernetes Infrastructure Offload software provides logging capabilities.
+Check logs emitted to stdout
+and stderr using <code class="docutils literal notranslate"><span class="pre">&quot;kubectl</span> <span class="pre">logs</span> <span class="pre">&lt;pod&gt;</span> <span class="pre">-n</span> <span class="pre">&lt;namespace&gt;&quot;</span></code>.</p></li>
+</ul>
+</section>
+<section id="faqs">
+<h3>FAQs<a class="headerlink" href="#faqs" title="Permalink to this heading"></a></h3>
+<ol class="arabic">
+<li><p>idpf crash observed leading to host reboot</p>
+<p>Reason : The setup_infra.sh in scripts/es2k dir installs idpf driver and
+then proceeds with creation of sub-functions. Under some circumtances,
+the sleep configured in the script is not sufficient. Driver is still busy
+allocating resources and initializing the base interfaces when the first subfunction
+creation request comes in, leading to crash.</p>
+<p>Solution : Increase the sleep time in the setup_infra.sh script after <code class="docutils literal notranslate"><span class="pre">&quot;install_drivers&quot;</span></code>
+function.</p>
+</li>
+<li><p>“failed to get a CDQ interface for pod: no free resources left” error is seen on infraagent and
+remaining pods do not come up</p>
+<p>Reason : The wrong cp_init.cfg file was used in the IMC and the correct number of host apf under num_max_vport in the cp_init file needs to be at least 50.
+Solution : Use the cdq uses cases cp_init.cfg file</p>
+</li>
+<li><p>CDQ interfaces not coming up</p>
+<p>Reason : IDPF driver failed to load
+Solution : Verify using <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> command that it is the case. Then perform a <code class="docutils literal notranslate"><span class="pre">modprobe</span> <span class="pre">idpf</span></code></p>
+</li>
+<li><p>Failed to connect to inframanager seen on host when in <code class="docutils literal notranslate"><span class="pre">split</span></code> mode.</p>
+<p>Reason: Firewalld blocking it
+Solution: Disable firewall service on ACC. Might need to disable network-manager
+service on both host and ACC.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl<span class="w"> </span>disable<span class="w"> </span>NetworkManager
+</pre></div>
+</div>
+</li>
+<li><p>Certs error while processing seen on inframanager when in <code class="docutils literal notranslate"><span class="pre">split</span></code> mode.</p>
+<p>Reason: Time might be out of sync.
+Solution: Ensure that the time is synced using the correct protocol.</p>
+</li>
+</ol>
+</section>
+<section id="clean-up">
+<h3>Clean Up<a class="headerlink" href="#clean-up" title="Permalink to this heading"></a></h3>
+<p>Reset kubernetes which would stop and remove all pods. Then, remove all k8s
+runtime configurations and other files. Finally, stop container services.
+Short way to cleanup everything</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/cleanup.sh
+</pre></div>
+</div>
+<p>If only delete all started pods, service deployments, namespace and
+daemonsets</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>&lt;<span class="w"> </span>&gt;
+kubectl<span class="w"> </span>delete<span class="w"> </span>deployment<span class="w"> </span>&lt;<span class="w"> </span>&gt;
+sudo<span class="w"> </span>ip<span class="w"> </span>-all<span class="w"> </span>netns<span class="w"> </span>delete
+make<span class="w"> </span>undeploy
+make<span class="w"> </span>undeploy-calico
+</pre></div>
+</div>
+<p>Reset Kubernetes and remove all configuration and runtime directories
+associated with Kubernetes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubeadm<span class="w"> </span>reset<span class="w"> </span>-f
+rm<span class="w"> </span>-rf<span class="w"> </span>/etc/cni<span class="w"> </span>/etc/kubernetes
+rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/etcd<span class="w"> </span>/var/lib/kubelet<span class="w"> </span>/var/lib/cni
+rm<span class="w"> </span>-rf<span class="w"> </span>/var/run/kubernetes
+rm<span class="w"> </span>-rf<span class="w"> </span><span class="nv">$HOME</span>/.kube
+</pre></div>
+</div>
+<p>Stop the local container registry and stop container services</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>container<span class="w"> </span>stop<span class="w"> </span>registry<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>container<span class="w"> </span>rm<span class="w"> </span>-v<span class="w"> </span>registry
+systemctl<span class="w"> </span>stop<span class="w"> </span>containerd
+</pre></div>
+</div>
+<p>Stop the ARP proxy and infrap4d processes running. This will also remove all
+the virtual interfaces that were created earlier.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pkill<span class="w"> </span>arp_proxy
+pkill<span class="w"> </span>infrap4d
+</pre></div>
+</div>
+<p>For ACC cleanup, only the below are needed</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pkill<span class="w"> </span>infrap4d
+pkill<span class="w"> </span>inframanager
+</pre></div>
+</div>
+</section>
+</section>
+<section id="versions-and-third-parties">
+<h2>Versions and Third-parties<a class="headerlink" href="#versions-and-third-parties" title="Permalink to this heading"></a></h2>
+<p>Versions of Kubernetes, linux distros, docker and other third-party libraries tested with (calico, felix)</p>
+<section id="os">
+<h3>OS<a class="headerlink" href="#os" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Linux</p>
+<ul>
+<li><p>Rocky Linux 9.2</p></li>
+<li><p>RHEL 9.2</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="golang">
+<h3>golang<a class="headerlink" href="#golang" title="Permalink to this heading"></a></h3>
+<p>go1.21.6</p>
+</section>
+<section id="docker">
+<h3>docker<a class="headerlink" href="#docker" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>version
+Client:<span class="w"> </span>Docker<span class="w"> </span>Engine<span class="w"> </span>-<span class="w"> </span>Community
+<span class="w"> </span>Version:<span class="w">           </span><span class="m">20</span>.10.12
+<span class="w"> </span>API<span class="w"> </span>version:<span class="w">       </span><span class="m">1</span>.41
+</pre></div>
+</div>
+</section>
+<section id="containerd">
+<h3>containerd<a class="headerlink" href="#containerd" title="Permalink to this heading"></a></h3>
+<p>Tested on 1.6.x</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctr<span class="w"> </span>version
+</pre></div>
+</div>
+</section>
+<section id="kubernetes">
+<h3>kubernetes<a class="headerlink" href="#kubernetes" title="Permalink to this heading"></a></h3>
+<p>Versions tested and supported with</p>
+<p>1.25.x</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>dnf<span class="w"> </span>list<span class="w"> </span>installed<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>kube
+cri-tools.x86_64<span class="w">                                 </span><span class="m">1</span>.25.2-0
+kubeadm.x86_64<span class="w">                                   </span><span class="m">1</span>.25.4-0
+kubectl.x86_64<span class="w">                                   </span><span class="m">1</span>.25.4-0
+kubelet.x86_64<span class="w">                                   </span><span class="m">1</span>.25.4-0
+</pre></div>
+</div>
+</section>
+<section id="calico">
+<h3>Calico<a class="headerlink" href="#calico" title="Permalink to this heading"></a></h3>
+<p>v3.24.1</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to k8s-infra-offload’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docker-containerd-install.html" class="btn btn-neutral float-right" title="Kubernetes, Docker, and containerd Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Intel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
